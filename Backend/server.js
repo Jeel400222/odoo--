@@ -12,6 +12,17 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use('/api/auth', authRoutes);
 
+const db1 = mongoose.createConnection('mongodb://user:pass@localhost:27017/db1', { useNewUrlParser: true, useUnifiedTopology: true });
+
+const db2 = mongoose.createConnection('mongodb://user:pass@localhost:27017/db2', { useNewUrlParser: true, useUnifiedTopology: true });
+
+const db = mongoose.connection;
+
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+db.once('open', () => {
+  console.log('MongoDB database connection established successfully');
+});
+
 // Register a new user
 app.post('/register', async (req, res) => {
     const { username, password } = req.body;
@@ -57,20 +68,8 @@ app.get('/protected', requireAuth, (req, res) => {
     res.json({ message: 'Access granted' });
   });
 
-mongoose.connect('mongodb://localhost:27017/sportsinfra', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => {
-  console.log('Connected to MongoDB');
-}).catch(err => {
-  console.error('Error connecting to MongoDB:', err);
-});
 
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/facility_management', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  });
+
 
   // Facility Schema
 const FacilitySchema = new mongoose.Schema({
@@ -252,10 +251,7 @@ app.post('/feedback', (req, res) => {
     });
   });
 
-  mongoose.connect('mongodb://localhost:27017/sportsinfra', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  });
+  
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
