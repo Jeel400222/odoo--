@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Facility Management System</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Facilities</h1>
+    <div id="facility-list">
+      <!-- Facilities will be dynamically generated here -->
+    </div>
+  </div>
+
+  <script>
+    fetch('/facilities')
+      .then(response => response.json())
+      .then(data => {
+        const facilityList = document.getElementById('facility-list');
+        data.forEach(facility => {
+          const div = document.createElement('div');
+          div.className = 'card';
+          div.innerHTML = `
+            <div class="card-body">
+              <h5 class="card-title">${facility.name}</h5>
+              <p class="card-text">Location: ${facility.location}</p>
+              <p class="card-text">Amenities: ${facility.amenities.join(', ')}</p>
+              <button class="btn btn-primary">Book Now</button>
+            </div>
+          `;
+          facilityList.appendChild(div);
+        });
+      });
+  </script>
+</body>
+</html>
